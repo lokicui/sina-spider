@@ -1,0 +1,20 @@
+import os
+import sys
+
+for line in open(sys.argv[1]):
+    line = line.strip()
+    items = line.strip().split('\t')
+    if len(items) != 2:
+        assert(False)
+    name, url = items[:2]
+    pos = url.find('?')
+    if pos == -1:
+        pos = len(url)
+    url = url[:pos]
+    pos = url.rfind('/')
+    if pos != -1:
+        uname = url[pos+1:]
+        print "'https://weibo.cn/%s', #%s" % (uname, name)
+    else:
+        print >> sys.stderr, line
+

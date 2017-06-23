@@ -1,0 +1,44 @@
+# encoding=utf-8
+# ------------------------------------------
+#   作用：清空Redis数据，重新跑数据时用。
+#   日期：2016-12-15
+#   作者：九茶<http://blog.csdn.net/bone_ace>
+# ------------------------------------------
+
+import settings
+import redis
+
+if __name__ == '__main__':
+    try:
+        rconn = redis.Redis(settings.REDIS_HOST, settings.REDIS_PORT, settings.REDIS_DB)
+    except Exception:
+        rconn = redis.Redis(settings.REDIS_HOST, settings.REDIS_PORT)
+
+    try:
+        rconn_filter = redis.Redis(settings.FILTER_HOST, settings.FILTER_PORT, settings.FILTER_DB)
+    except Exception:
+        try:
+            rconn_filter = redis.Redis(settings.FILTER_HOST, settings.FILTER_PORT)
+        except Exception:
+            rconn_filter = None
+
+    if rconn:
+        if 'SinaUserSpider:requests' in rconn.keys():
+            rconn.delete('SinaUserSpider:requests')
+        if 'SinaTopicSpider:requests' in rconn.keys():
+            rconn.delete('SinaTopicSpider:requests')
+
+        if 'SinaUserSpider:dupefilter0' in rconn.keys():
+            rconn.delete('SinaUserSpider:dupefilter0')
+        if 'SinaUserSpider:dupefilter1' in rconn.keys():
+            rconn.delete('SinaUserSpider:dupefilter1')
+        if 'SinaTopicSpider:dupefilter0' in rconn.keys():
+            rconn.delete('SinaTopicSpider:dupefilter0')
+        if 'SinaTopicSpider:dupefilter1' in rconn.keys():
+            rconn.delete('SinaTopicSpider:dupefilter1')
+        if 'SinaUserSpider:dupefilter' in rconn.keys():
+            rconn.delete('SinaUserSpider:dupefilter')
+        if 'SinaTopicSpider:dupefilter' in rconn.keys():
+            rconn.delete('SinaTopicSpider:dupefilter')
+
+    print 'Finish!'
